@@ -1,12 +1,20 @@
 #include <iostream>
 #include <vector>
-
 #include "adios2.h"
+
+using namespace std;
 
 int main(int argc, char *argv[])
 {
-    adios::ADIOS adios(adios::Verbose::WARN, true);
+    string ip, port;
+    if(argc >= 2){
+        ip = argv[1];
+        if(argc >= 3){
+            port = argv[2];
+        }
+    }
 
+    adios::ADIOS adios(adios::Verbose::WARN, true);
     std::vector<float> myFloats(1024);
     const std::size_t Nx = myFloats.size();
     for(size_t i=0; i<Nx; i++){
@@ -22,12 +30,16 @@ int main(int argc, char *argv[])
                 "real_time=yes",
                 "method_type=stream",
                 "method=zmq",
-                "monitoring=yes",
+                "monitoring=no",
                 "local_ip=127.0.0.1",
-                "remote_ip=127.0.0.1",
+                "remote_ip=" + ip,
                 "local_port=12306",
                 "remote_port=12307");
     }
+
+
+
+
 
     auto datamanWriter = adios.Open("stream", "w", datamanSettings);
     if (datamanWriter == nullptr)

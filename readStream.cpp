@@ -1,18 +1,8 @@
-/*
- * Distributed under the OSI-approved Apache License, Version 2.0.  See
- * accompanying file Copyright.txt for details.
- *
- * helloADIOSNoXML_OOP.cpp
- *
- *  Created on: Jan 9, 2017
- *      Author: wfg
- */
-
 #include <iostream>
 #include <numeric>
 #include <vector>
-
 #include "adios2.h"
+using namespace std;
 
 void getcb(const void *data, std::string doid, std::string var,
            std::string dtype, std::vector<std::size_t> varshape)
@@ -21,8 +11,7 @@ void getcb(const void *data, std::string doid, std::string var,
     std::cout << "variable name = " << var << "\n";
     std::cout << "data type = " << dtype << "\n";
 
-    std::size_t varsize = std::accumulate(varshape.begin(), varshape.end(), 1,
-                                          std::multiplies<std::size_t>());
+    std::size_t varsize = std::accumulate(varshape.begin(), varshape.end(), 1, std::multiplies<std::size_t>());
 
     for (unsigned int i = 0; i < varsize; ++i)
         std::cout << ((float *)data)[i] << " ";
@@ -31,8 +20,15 @@ void getcb(const void *data, std::string doid, std::string var,
 
 int main(int argc, char *argv[])
 {
-    const bool adiosDebug = true;
-    adios::ADIOS adios(adios::Verbose::WARN, adiosDebug);
+    string ip, port;
+    if(argc >= 2){
+        ip = argv[1];
+        if(argc >= 3){
+            port = argv[2];
+        }
+    }
+
+    adios::ADIOS adios(adios::Verbose::WARN, true);
 
     try
     {
@@ -45,7 +41,7 @@ int main(int argc, char *argv[])
                 "method_type=stream",
                 "method=zmq",
                 "monitoring=yes",
-                "local_ip=127.0.0.1",
+                "local_ip=" + ip,
                 "remote_ip=127.0.0.1",
                 "local_port=12307",
                 "remote_port=12306");
