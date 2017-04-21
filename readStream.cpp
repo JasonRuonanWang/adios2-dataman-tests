@@ -20,7 +20,7 @@ void getcb(const void *data, std::string doid, std::string var,
 
 int main(int argc, char *argv[])
 {
-    string ip, port;
+    string ip="127.0.0.1", port;
     if(argc >= 2){
         ip = argv[1];
         if(argc >= 3){
@@ -30,13 +30,11 @@ int main(int argc, char *argv[])
 
     adios::ADIOS adios(adios::Verbose::WARN, true);
 
-    try
+    adios::Method &datamanSettings = adios.DeclareMethod("WAN");
+    if (!datamanSettings.IsUserDefined())
     {
-        adios::Method &datamanSettings = adios.DeclareMethod("WAN");
-        if (!datamanSettings.IsUserDefined())
-        {
-            datamanSettings.SetEngine("DataManReader");
-            datamanSettings.SetParameters(
+        datamanSettings.SetEngine("DataManReader");
+        datamanSettings.SetParameters(
                 "real_time=yes",
                 "method_type=stream",
                 "method=zmq",
@@ -45,41 +43,18 @@ int main(int argc, char *argv[])
                 "remote_ip=127.0.0.1",
                 "local_port=12307",
                 "remote_port=12306");
-        }
-
-        auto datamanReader = adios.Open("stream", "r", datamanSettings);
-
-        if (datamanReader == nullptr)
-            throw std::ios_base::failure("ERROR: failed to create DataMan I/O engine at Open\n");
-
-        datamanReader->SetCallBack(getcb);
-
-        while(1)
-        {
-            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        }
-
-        adios::Variable<double> *ioMyDoubles = datamanReader->InquireVariableDouble("ioMyDoubles");
-        if (ioMyDoubles == nullptr)
-            std::cout << "Variable ioMyDoubles not read...yet\n";
-
-        datamanReader->Close();
     }
-    catch (std::invalid_argument &e)
+
+    auto datamanReader = adios.Open("stream", "r", datamanSettings);
+
+    datamanReader->SetCallBack(getcb);
+
+    while(1)
     {
-        std::cout << "Invalid argument exception, STOPPING PROGRAM\n";
-        std::cout << e.what() << "\n";
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
-    catch (std::ios_base::failure &e)
-    {
-        std::cout << "System exception, STOPPING PROGRAM\n";
-        std::cout << e.what() << "\n";
-    }
-    catch (std::exception &e)
-    {
-        std::cout << "Exception, STOPPING PROGRAM\n";
-        std::cout << e.what() << "\n";
-    }
+
+    datamanReader->Close();
 
     return 0;
 }
