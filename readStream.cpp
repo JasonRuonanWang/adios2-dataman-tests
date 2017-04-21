@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
         datamanSettings.SetParameters(
                 "real_time=yes",
                 "method_type=stream",
-                "method=zmq",
+                "method=" + method,
                 "monitoring=yes",
                 "local_ip=" + local_ip,
                 "remote_ip=" + remote_ip,
