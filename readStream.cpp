@@ -21,9 +21,9 @@ int main(int argc, char *argv[])
 {
     // args
     string local_ip = "0.0.0.0";
-    string local_port = "12306";
+    string local_port = "12307";
     string remote_ip = "127.0.0.1";
-    string remote_port = "12307";
+    string remote_port = "12306";
     string method = "zmq";
 
     if(argc >= 2){

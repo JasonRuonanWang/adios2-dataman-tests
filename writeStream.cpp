@@ -47,8 +47,8 @@ int main(int argc, char *argv[])
                 "monitoring=no",
                 "local_ip=" + local_ip,
                 "remote_ip=" + remote_ip,
-                "local_port" + local_port,
-                "remote_port" + remote_port);
+                "local_port=" + local_port,
+                "remote_port=" + remote_port);
     }
     auto datamanWriter = adios.Open("stream", "w", datamanSettings);
     for(int i=0; i<100; i++){
