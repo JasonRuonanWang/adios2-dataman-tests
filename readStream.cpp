@@ -20,7 +20,7 @@ void getcb(const void *data, std::string doid, std::string var,
 int main(int argc, char *argv[])
 {
     // args
-    string local_ip = "127.0.0.1";
+    string local_ip = "0.0.0.0";
     string local_port = "12306";
     string remote_ip = "127.0.0.1";
     string remote_port = "12307";
@@ -51,8 +51,8 @@ int main(int argc, char *argv[])
                 "monitoring=yes",
                 "local_ip=" + local_ip,
                 "remote_ip=" + remote_ip,
-                "local_port" + local_port,
-                "remote_port" + remote_port);
+                "local_port=" + local_port,
+                "remote_port=" + remote_port);
     }
 
     auto datamanReader = adios.Open("stream", "r", datamanSettings);
