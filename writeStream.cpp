@@ -6,7 +6,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    string ip, port;
+    string ip="127.0.0.1", port;
     if(argc >= 2){
         ip = argv[1];
         if(argc >= 3){
@@ -37,36 +37,13 @@ int main(int argc, char *argv[])
                 "remote_port=12307");
     }
 
-
-
-
-
     auto datamanWriter = adios.Open("stream", "w", datamanSettings);
     if (datamanWriter == nullptr)
         throw std::ios_base::failure("ERROR: failed to create DataMan I/O engine at Open\n");
 
     for(int i=0; i<100; i++){
-        try
-        {
-            datamanWriter->Write<float>(ioMyFloats, myFloats.data());
-            datamanWriter->Close();
-        }
-        catch (std::invalid_argument &e)
-        {
-            std::cout << "Invalid argument exception, STOPPING PROGRAM\n";
-            std::cout << e.what() << "\n";
-        }
-        catch (std::ios_base::failure &e)
-        {
-            std::cout << "System exception, STOPPING PROGRAM\n";
-            std::cout << e.what() << "\n";
-        }
-        catch (std::exception &e)
-        {
-            std::cout << "Exception, STOPPING PROGRAM\n";
-            std::cout << e.what() << "\n";
-        }
-
+        datamanWriter->Write<float>(ioMyFloats, myFloats.data());
+        datamanWriter->Close();
     }
     return 0;
 }
