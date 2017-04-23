@@ -2,7 +2,7 @@
 #include <numeric>
 #include <vector>
 #include "adios2.h"
-using namespace std;
+#include "common.h"
 
 void getcb(const void *data, std::string doid, std::string var,
            std::string dtype, std::vector<std::size_t> varshape)
@@ -11,32 +11,18 @@ void getcb(const void *data, std::string doid, std::string var,
     std::cout << "variable name = " << var << "\n";
     std::cout << "data type = " << dtype << "\n";
     std::size_t varsize = std::accumulate(varshape.begin(), varshape.end(), 1, std::multiplies<std::size_t>());
-    if(varsize > 256) varsize = 256;
+//    if(varsize > 256) varsize = 256;
     for (unsigned int i = 0; i < varsize; ++i)
         std::cout << ((float *)data)[i] << " ";
     std::cout << std::endl;
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
-    // args
-    string local_ip = "0.0.0.0";
-    string local_port = "12307";
-    string remote_ip = "127.0.0.1";
-    string remote_port = "12306";
-    string method = "mdtm";
 
-    if(argc >= 2){
-        local_ip = argv[1];
-    }
-
-    if(argc >= 3){
-        method = argv[2];
-    }
-
-    if(argc >= 4){
-        local_port = argv[3];
-    }
+    string local_port = "12306";
+    string remote_port = "12307";
+    ParseArgs(argc, argv);
 
     // adios
     adios::ADIOS adios(adios::Verbose::WARN, true);
@@ -64,3 +50,6 @@ int main(int argc, char *argv[])
     datamanReader->Close();
     return 0;
 }
+
+
+

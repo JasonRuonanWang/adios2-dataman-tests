@@ -2,10 +2,10 @@
 using namespace std;
 
 string local_ip = "127.0.0.1";
-string local_port = "12306";
 string remote_ip = "127.0.0.1";
-string remote_port = "12307";
 string method = "mdtm";
+string compression_method = "null";
+string compression_rate = "6.0";
 
 void ParseArgs(int argc, char **argv){
 
@@ -13,7 +13,9 @@ void ParseArgs(int argc, char **argv){
     options.add_options()
         ("i,ip", "IP address to send data to", cxxopts::value<string>())
         ("p,port", "Port to send data to", cxxopts::value<int>())
-        ("m,method", "DataMan plugin to use", cxxopts::value<string>())
+        ("m,method", "DataMan transport plugin to use", cxxopts::value<string>())
+        ("c,compression_method", "DataMan compression plugin to use", cxxopts::value<string>())
+        ("r,compression_rate", "Compression rate", cxxopts::value<string>())
         ;
     options.parse(argc, argv);
 
@@ -21,12 +23,16 @@ void ParseArgs(int argc, char **argv){
         remote_ip = options["ip"].as<string>();
     }
 
-    if(options.count("port") > 0){
-        remote_port = options["port"].as<int>();
-    }
-
     if(options.count("method") > 0){
         method = options["method"].as<string>();
+    }
+
+    if(options.count("compression_method") > 0){
+        compression_method = options["compression_method"].as<string>();
+    }
+
+    if(options.count("compression_rate") > 0){
+        compression_rate = options["compression_rate"].as<string>();
     }
 }
 

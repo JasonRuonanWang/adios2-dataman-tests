@@ -5,11 +5,11 @@
 
 #include "common.h"
 
-
 int main(int argc, char *argv[])
 {
 
-
+    string local_port = "12307";
+    string remote_port = "12306";
     ParseArgs(argc, argv);
 
     // data
@@ -28,8 +28,8 @@ int main(int argc, char *argv[])
         datamanSettings.SetEngine("DataManWriter");
         datamanSettings.SetParameters(
                 "real_time=yes",
-                "compression_method=zfp",
-                "compression_rate=10",
+                "compression_method=" + compression_method,
+                "compression_rate=" + compression_rate,
                 "method_type=stream",
                 "method=" + method,
                 "monitoring=no",
@@ -39,10 +39,12 @@ int main(int argc, char *argv[])
                 "remote_port=" + remote_port);
     }
     auto datamanWriter = adios.Open("stream", "w", datamanSettings);
-    for(int i=0; i<10; i++){
+    for(int i=0; i<4; i++){
         datamanWriter->Write<float>(ioMyFloats, myFloats.data());
         datamanWriter->Close();
     }
     return 0;
 }
+
+
 
