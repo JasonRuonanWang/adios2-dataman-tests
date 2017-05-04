@@ -23,6 +23,10 @@ void ParseArgs(int argc, char **argv){
         remote_ip = options["ip"].as<string>();
     }
 
+    if(options.count("ip") > 0){
+        local_ip = options["ip"].as<string>();
+    }
+
     if(options.count("method") > 0){
         method = options["method"].as<string>();
     }

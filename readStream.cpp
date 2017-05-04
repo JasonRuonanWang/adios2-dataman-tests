@@ -20,6 +20,7 @@ void getcb(const void *data, std::string doid, std::string var,
 int main(int argc, char **argv)
 {
 
+    string local_ip = "0.0.0.0";
     string local_port = "12306";
     string remote_port = "12307";
     ParseArgs(argc, argv);
