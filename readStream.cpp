@@ -11,7 +11,7 @@ void getcb(const void *data, std::string doid, std::string var,
     std::cout << "variable name = " << var << "\n";
     std::cout << "data type = " << dtype << "\n";
     std::size_t varsize = std::accumulate(varshape.begin(), varshape.end(), 1, std::multiplies<std::size_t>());
-//    if(varsize > 256) varsize = 256;
+    if(varsize > 256) varsize = 256;
     for (unsigned int i = 0; i < varsize; ++i)
         std::cout << ((float *)data)[i] << " ";
     std::cout << std::endl;

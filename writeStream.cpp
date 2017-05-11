@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     ParseArgs(argc, argv);
 
     // data
-    std::vector<float> myFloats(1024);
+    std::vector<float> myFloats(1024 * 1024 * 32);
     const std::size_t Nx = myFloats.size();
     for(size_t i=0; i<Nx; i++){
         myFloats[i]=i;
@@ -39,7 +39,8 @@ int main(int argc, char *argv[])
                 "remote_port=" + remote_port);
     }
     auto datamanWriter = adios.Open("stream", "w", datamanSettings);
-    for(int i=0; i<4; i++){
+    for(int i=0; i<4000; i++){
+        std::cout << "wrote time step "  << i << std::endl;
         datamanWriter->Write<float>(ioMyFloats, myFloats.data());
         datamanWriter->Close();
     }
