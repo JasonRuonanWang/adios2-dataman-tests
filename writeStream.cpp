@@ -32,6 +32,7 @@ int main(int argc, char *argv[])
                 "compression_rate=" + compression_rate,
                 "method_type=stream",
                 "method=" + method,
+                "num_channels=" + num_channels,
                 "monitoring=no",
                 "local_ip=" + local_ip,
                 "remote_ip=" + remote_ip,
@@ -39,7 +40,7 @@ int main(int argc, char *argv[])
                 "remote_port=" + remote_port);
     }
     auto datamanWriter = adios.Open("stream", "w", datamanSettings);
-    for(int i=0; i<4000; i++){
+    for(int i=0; i<40; i++){
         std::cout << "wrote time step "  << i << std::endl;
         datamanWriter->Write<float>(ioMyFloats, myFloats.data());
         datamanWriter->Close();

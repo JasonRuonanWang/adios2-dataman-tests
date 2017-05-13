@@ -35,6 +35,7 @@ int main(int argc, char **argv)
                 "real_time=yes",
                 "method_type=stream",
                 "method=" + method,
+                "num_channels=" + num_channels,
                 "monitoring=yes",
                 "local_ip=" + local_ip,
                 "remote_ip=" + remote_ip,
