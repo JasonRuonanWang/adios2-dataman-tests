@@ -10,6 +10,8 @@ int main(int argc, char **argv)
 
     std::vector<float> myFloats(variable_size);
 
+    std::cout << "Variable size = " << variable_size << std::endl;
+
     adios2::Params engineParams;
     engineParams["IPAddress"] = ip;
     engineParams["Port"] = port;
@@ -22,11 +24,18 @@ int main(int argc, char **argv)
 
     adios2::Engine engine = io.Open("Test", adios2::Mode::Read);
 
-    auto varFloats = io.InquireVariable<float>("myfloats");
-
-    for(int i=0; i<40; i++)
+    while(true)
     {
+        auto status = engine.BeginStep();
+        if(status == adios2::StepStatus::EndOfStream)
+        {
+            break;
+        }
+
+        auto varFloats = io.InquireVariable<float>("myfloats");
+
         engine.Get<float>(varFloats, myFloats.data());
+        engine.EndStep();
     }
 
     engine.Close();

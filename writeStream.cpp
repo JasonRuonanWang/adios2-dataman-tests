@@ -16,9 +16,11 @@ int main(int argc, char *argv[])
         myFloats[i]=i;
     }
 
-    adios2::Dims shape({1000000});
+    std::cout << "Variable size = " << variable_size << std::endl;
+
+    adios2::Dims shape({variable_size});
     adios2::Dims start({0});
-    adios2::Dims count({1000000});
+    adios2::Dims count({variable_size});
 
     adios2::Params engineParams;
     engineParams["IPAddress"] = ip;
@@ -34,9 +36,11 @@ int main(int argc, char *argv[])
 
     adios2::Engine engine = io.Open("Test", adios2::Mode::Write);
 
-    for(int i=0; i<40; i++)
+    for(size_t i=0; i<steps; i++)
     {
+        engine.BeginStep();
         engine.Put<float>(varFloats, myFloats.data());
+        engine.EndStep();
     }
 
     engine.Close();
