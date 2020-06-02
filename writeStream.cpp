@@ -8,43 +8,39 @@
 int main(int argc, char *argv[])
 {
 
-    string local_port = "12307";
-    string remote_port = "12306";
     ParseArgs(argc, argv);
 
-    // data
-    std::vector<float> myFloats(1024 * 1024 * 32);
-    const std::size_t Nx = myFloats.size();
-    for(size_t i=0; i<Nx; i++){
+    std::vector<float> myFloats(variable_size);
+    for(size_t i=0; i<myFloats.size(); i++)
+    {
         myFloats[i]=i;
     }
 
-    // adios
-    adios::ADIOS adios(adios::Verbose::WARN, true);
-    auto ioMyFloats = adios.DefineVariable<float>("myfloats", adios::Dims{Nx});
-    adios::Method &datamanSettings = adios.DeclareMethod("WAN");
-    if (!datamanSettings.IsUserDefined())
+    adios2::Dims shape({1000000});
+    adios2::Dims start({0});
+    adios2::Dims count({1000000});
+
+    adios2::Params engineParams;
+    engineParams["IPAddress"] = ip;
+    engineParams["Port"] = port;
+    engineParams["TransportMode"] = transport_method;
+
+    adios2::ADIOS adios;
+    adios2::IO io = adios.DeclareIO("TestIO");
+    io.SetEngine("DataMan");
+    io.SetParameters(engineParams);
+
+    auto varFloats = io.DefineVariable<float>("myfloats", shape, start, count);
+
+    adios2::Engine engine = io.Open("Test", adios2::Mode::Write);
+
+    for(int i=0; i<40; i++)
     {
-        datamanSettings.SetEngine("DataManWriter");
-        datamanSettings.SetParameters(
-                "real_time=yes",
-                "compression_method=" + compression_method,
-                "compression_rate=" + compression_rate,
-                "method_type=stream",
-                "method=" + method,
-                "num_channels=" + num_channels,
-                "monitoring=no",
-                "local_ip=" + local_ip,
-                "remote_ip=" + remote_ip,
-                "local_port=" + local_port,
-                "remote_port=" + remote_port);
+        engine.Put<float>(varFloats, myFloats.data());
     }
-    auto datamanWriter = adios.Open("stream", "w", datamanSettings);
-    for(int i=0; i<40; i++){
-        std::cout << "wrote time step "  << i << std::endl;
-        datamanWriter->Write<float>(ioMyFloats, myFloats.data());
-        datamanWriter->Close();
-    }
+
+    engine.Close();
+
     return 0;
 }
 

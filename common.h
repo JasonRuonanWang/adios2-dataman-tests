@@ -1,12 +1,13 @@
 #include "cxxopts.hpp"
 using namespace std;
 
-string local_ip = "127.0.0.1";
-string remote_ip = "127.0.0.1";
-string method = "zmq";
-string compression_method = "null";
+string ip = "127.0.0.1";
+string port = "12306";
+string transport_method = "fast";
+string compression_method = "";
 string compression_rate = "6.0";
-string num_channels = "4";
+size_t variable_size = 1024;
+size_t steps = 1024;
 
 void ParseArgs(int argc, char **argv){
 
@@ -14,27 +15,24 @@ void ParseArgs(int argc, char **argv){
     options.add_options()
         ("i,ip", "IP address to send data to", cxxopts::value<string>())
         ("p,port", "Port to send data to", cxxopts::value<string>())
-        ("m,method", "DataMan transport plugin to use", cxxopts::value<string>())
+        ("m,transport_method", "DataMan transport plugin to use", cxxopts::value<string>())
         ("c,compression_method", "DataMan compression plugin to use", cxxopts::value<string>())
         ("r,compression_rate", "Compression rate", cxxopts::value<string>())
-        ("n,num_channels", "Number of channels", cxxopts::value<string>())
+        ("s,variable_size", "Variable Size", cxxopts::value<size_t>())
+        ("t,steps", "steps", cxxopts::value<size_t>())
         ;
     options.parse(argc, argv);
 
     if(options.count("ip") > 0){
-        remote_ip = options["ip"].as<string>();
+        ip = options["ip"].as<string>();
     }
 
-    if(options.count("ip") > 0){
-        local_ip = options["ip"].as<string>();
+    if(options.count("port") > 0){
+        port = options["port"].as<string>();
     }
 
-    if(options.count("num_channels") > 0){
-        num_channels = options["num_channels"].as<string>();
-    }
-
-    if(options.count("method") > 0){
-        method = options["method"].as<string>();
+    if(options.count("transport_method") > 0){
+        transport_method = options["transport_method"].as<string>();
     }
 
     if(options.count("compression_method") > 0){
@@ -43,6 +41,14 @@ void ParseArgs(int argc, char **argv){
 
     if(options.count("compression_rate") > 0){
         compression_rate = options["compression_rate"].as<string>();
+    }
+
+    if(options.count("steps") > 0){
+        steps = options["steps"].as<size_t>();
+    }
+
+    if(options.count("variable_size") > 0){
+        variable_size = options["variable_size"].as<size_t>();
     }
 }
 
