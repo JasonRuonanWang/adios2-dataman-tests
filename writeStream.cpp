@@ -26,6 +26,7 @@ int main(int argc, char *argv[])
     engineParams["IPAddress"] = ip;
     engineParams["Port"] = port;
     engineParams["TransportMode"] = transport_method;
+    engineParams["Monitor"] = "true";
 
     adios2::ADIOS adios;
     adios2::IO io = adios.DeclareIO("TestIO");

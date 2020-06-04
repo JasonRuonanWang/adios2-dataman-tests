@@ -6,8 +6,8 @@ string port = "12306";
 string transport_method = "fast";
 string compression_method = "";
 string compression_rate = "6.0";
-size_t variable_size = 1024;
-size_t steps = 1024;
+size_t variable_size = 1000000;
+size_t steps = 1000;
 
 void ParseArgs(int argc, char **argv){
 
